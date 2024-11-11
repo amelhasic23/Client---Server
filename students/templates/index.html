@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Management System</title>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <link rel="stylesheet" href="index.css".>
+</head>
+<body>
+    <h1>Student Management System</h1>
+    
+    <h2>Get Student Info by Index Number</h2>
+    <input type="text" id="indexNumberInput" placeholder="Enter index number">
+    <button onclick="getStudentInfo()">Get Info</button>
+    <div id="studentInfo"></div>
+    
+    <h2>Add New Student</h2>
+    <input type="text" id="firstNameInput" placeholder="First Name">
+    <input type="text" id="lastNameInput" placeholder="Last Name">
+    <input type="text" id="indexNumberInputAdd" placeholder="Index Number">
+    <input type="number" id="gradeInput" placeholder="Average Grade">
+    <button onclick="addStudent()">Add Student</button>
+
+    <script>
+        function getStudentInfo() {
+            var indexNumber = $('#indexNumberInput').val();
+            $.ajax({
+                url: `/students/${indexNumber}/`,
+                type: 'GET',
+                success: function(data) {
+                    $('#studentInfo').html(`<p>${JSON.stringify(data)}</p>`);
+                },
+                error: function(xhr, textStatus, errorThrown) {
+                    $('#studentInfo').html(`<p>Error: ${xhr.responseText}</p>`);
+                }
+            });
+        }
+
+        function addStudent() {
+            var firstName = $('#firstNameInput').val();
+            var lastName = $('#lastNameInput').val();
+            var indexNumber = $('#indexNumberInputAdd').val();
+            var grade = $('#gradeInput').val();
+
+            $.ajax({
+                url: '/students/',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    first_name: firstName,
+                    last_name: lastName,
+                    index_number: indexNumber,
+                    average_grade: parseFloat(grade)
+                }),
+                success: function(data) {
+                    alert('Student added successfully!');
+                },
+                error: function(xhr, textStatus, errorThrown) {
+                    alert('Error adding student: ' + xhr.responseText);
+                }
+            });
+        }
+    </script>
+</body>
+</html>
